@@ -1,8 +1,6 @@
 from rest_framework import serializers
 
 from authentication.models import Profile
-from plantagora.models import Grower
-from plantagora.serializers import GrowerSerializer
 
 
 class ProfileSerializer(serializers.ModelSerializer):

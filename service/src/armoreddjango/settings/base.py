@@ -16,7 +16,7 @@ DEFAULT_APPS = [
 ]
 
 LOCAL_APPS = [
-    "armoreddjangotemplate",
+    "armoreddjango",
     "authentication",
     "utils",
 ]
@@ -39,7 +39,7 @@ MIDDLEWARE = [
     "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
-ROOT_URLCONF = "armoreddjangotemplate.urls"
+ROOT_URLCONF = "armoreddjango.urls"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
@@ -75,7 +75,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "armoreddjangotemplate.wsgi.application"
+WSGI_APPLICATION = "armoreddjango.wsgi.application"
 
 AUTH_USER_MODEL = "authentication.profile"
 
@@ -104,12 +104,12 @@ USE_I18N = True
 
 USE_TZ = True
 
-MEDIA_URL = "/media/"
+MEDIA_URL = 'media/'
 
-MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATIC_URL = "/static/"
+STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
