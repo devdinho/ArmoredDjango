@@ -2,7 +2,7 @@
 
 ## Visão Geral
 
-ArmoredDjango é uma aplicação web baseada em Django, projetada para interagir e gerenciar o serviço do modelo de linguagem Billumy.
+ArmoredDjango é um template de aplicação web baseada em Django.
 
 ## Funcionalidades
 
