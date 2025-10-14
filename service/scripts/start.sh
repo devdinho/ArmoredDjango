@@ -1,7 +1,7 @@
 set -e
 
 echo "🟡 Coletando arquivos estáticos: *.js & *.css ..."
-echo no | python src/manage.py collectstatic --noinput
+echo no | python src/manage.py collectstatic --noinput > /dev/null 2>&1
 echo "✅ Coletando arquivos estáticos com sucesso!"
 
 echo "🟡 Migrando o banco de dados..."
@@ -15,4 +15,11 @@ python src/manage.py shell -c "from authentication.models import Profile; \
                            email='admin@example.com', password='123', profileType=1)"
 
 cd /app/src
-gunicorn --config gunicorn_config.py armoreddjango.wsgi:application
+
+if [ "$PRODUCTION" = "True" ]; then
+    echo "🟡 Iniciando em modo PRODUÇÃO..."
+    gunicorn --config gunicorn_config.py armoreddjango.wsgi:application
+else
+    echo "🟡 Iniciando em modo DESENVOLVIMENTO..."
+    python manage.py runserver 0.0.0.0:8003
+fi

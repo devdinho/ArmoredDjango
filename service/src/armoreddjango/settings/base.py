@@ -24,6 +24,7 @@ LOCAL_APPS = [
 OTHER_APPS = [
     "rest_framework",
     "simple_history",
+    "drf_yasg",
 ]
 
 INSTALLED_APPS = DEFAULT_APPS + LOCAL_APPS + OTHER_APPS

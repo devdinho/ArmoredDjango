@@ -8,7 +8,8 @@ SITE_ID = 1
 
 load_dotenv(override=True)
 
-DEBUG = os.getenv("DEBUG")
+DEBUG = os.getenv("DEBUG").lower() == "true"
+PRODUCTION = os.getenv("PRODUCTION", "False").lower() == "true"
 
 POSTGRES_DB = "armoreddjango_db"
 POSTGRES_USER = os.getenv("POSTGRES_USER")
@@ -21,10 +22,10 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 ALLOWED_HOSTS = [
     "0.0.0.0",
     "localhost",
-    # "insert your domai, armoreddjango.dinho.dev"
+    os.getenv("SYSTEM_URL", "insert-your-domain-here.com"),
 ]
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8003", "http://0.0.0.0:8003", "https://armoreddjango.dinho.dev"]
+CSRF_TRUSTED_ORIGINS = ["http://localhost:8003", "http://0.0.0.0:8003", f"https://{os.getenv('SYSTEM_URL', 'insert-your-domain-here.com')}"]
 
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 
