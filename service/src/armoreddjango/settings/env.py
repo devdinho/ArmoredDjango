@@ -25,7 +25,11 @@ ALLOWED_HOSTS = [
     os.getenv("SYSTEM_URL", "insert-your-domain-here.com"),
 ]
 
-CSRF_TRUSTED_ORIGINS = ["http://localhost:8003", "http://0.0.0.0:8003", f"https://{os.getenv('SYSTEM_URL', 'insert-your-domain-here.com')}"]
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:8003", 
+    "http://0.0.0.0:8003", 
+    f"https://{os.getenv('SYSTEM_URL', 'insert-your-domain-here.com')}"
+]
 
 CORS_ALLOWED_ORIGINS = CSRF_TRUSTED_ORIGINS
 

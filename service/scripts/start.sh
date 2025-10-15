@@ -12,7 +12,8 @@ python src/manage.py migrate --noinput
 python src/manage.py shell -c "from authentication.models import Profile; \
                            Profile.objects.filter(username='admin').exists() or \
                            Profile.objects.create_superuser(username='admin',
-                           email='admin@example.com', password='123', profileType=1)"
+                           email='admin@example.com', password='$ADMIN_PASSWORD', profileType=1,
+                           first_name='Admin', last_name='User')"
 
 cd /app/src
 

@@ -4,6 +4,7 @@ from rest_framework.exceptions import (MethodNotAllowed, NotFound,
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from drf_yasg.utils import swagger_auto_schema
 
 from authentication.models import Profile
 from authentication.serializers import ProfileSerializer
@@ -31,8 +32,10 @@ class ProfileRestView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         return Profile.objects.filter(id=self.request.user.id)
-
+    
+    @swagger_auto_schema(auto_schema=None)
     def create(self, request, *args, **kwargs):
+        # Este endpoint não aparecerá na documentação da API gerada
         raise MethodNotAllowed("POST", detail="Create not allowed")
 
     def list(self, request):

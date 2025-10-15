@@ -19,8 +19,6 @@ class ProfileSerializer(serializers.ModelSerializer):
     - date_joined: Data e hora de criação do usuário.
     """
 
-    grower = serializers.SerializerMethodField()
-
     class Meta:
         model = Profile
         fields = (
@@ -30,7 +28,6 @@ class ProfileSerializer(serializers.ModelSerializer):
             "username",
             "password",
             "email",
-            "grower",
             "last_login",
             "date_joined",
         )
