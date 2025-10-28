@@ -32,6 +32,7 @@ class ProfileSerializer(serializers.ModelSerializer):
             "date_joined",
         )
         extra_kwargs = {"password": {"write_only": True}}
+        read_only_fields = ("last_login", "date_joined")
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -43,14 +44,17 @@ class ProfileSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         newProfile = Profile(
-            username=validated_data["username"],
-            first_name=validated_data["first_name"],
-            last_name=validated_data["last_name"],
-            email=validated_data["email"],
+            username=validated_data.get("username", None),
+            first_name=validated_data.get("first_name", None),
+            last_name=validated_data.get("last_name", None),
+            email=validated_data.get("email", None).lower(),
         )
 
-        newProfile.set_password(validated_data["password"])
-        newProfile.save()
+        newProfile.set_password(validated_data.get("password", None))
+        try:
+            newProfile.save()
+        except Exception as e:
+            raise serializers.ValidationError(str(e.__cause__))
 
         return newProfile
 
