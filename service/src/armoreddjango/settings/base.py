@@ -23,6 +23,7 @@ LOCAL_APPS = [
 
 OTHER_APPS = [
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
     "simple_history",
     "corsheaders",
     "drf_yasg",
@@ -55,7 +56,7 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=1440),  # 1 Day
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),  # 15 Minutes
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 7 Days
     "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),  # 1 Day
     "SLIDING_TOKEN_LIFETIME": timedelta(days=7),  # 7 Days

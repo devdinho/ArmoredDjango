@@ -128,3 +128,32 @@ def test_verify_token():
         format="json",
     )
     assert response.status_code == 200, response.content
+
+
+@pytest.mark.django_db
+def test_blacklist_token():
+    login = _make_login()
+
+    assert login.status_code == 200, login.content
+
+    data = login.json()
+    refresh_token = data.get("refresh")
+
+    client = APIClient()
+    response = client.post(
+        "/api/logout/",
+        {"refresh": refresh_token},
+        format="json",
+    )
+
+    assert response.status_code == 200, response.content
+
+    response = client.post(
+        "/api/login/refresh/",
+        {"refresh": refresh_token},
+        format="json",
+    )
+
+    assert response.status_code == 401, response.content
+    assert response.json().get("detail") == "Token is blacklisted"
+    assert response.json().get("code") == "token_not_valid"

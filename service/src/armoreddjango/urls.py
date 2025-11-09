@@ -7,6 +7,7 @@ from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework.routers import DefaultRouter
 from rest_framework_simplejwt.views import (
+    TokenBlacklistView,
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
@@ -32,6 +33,7 @@ urlpatterns = [
     path("api/login/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("api/login/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path("api/login/verify/", TokenVerifyView.as_view(), name="token_verify"),
+    path("api/logout/", TokenBlacklistView.as_view(), name="token_blacklist"),
 ]
 if not settings.PRODUCTION:
     urlpatterns += [
