@@ -1,5 +1,4 @@
-
-![ArmoredDjango](https://portifolio.dinho.dev/media/projetos/Armored_Django_V3.png)
+![ArmoredDjango](title.png)
 
 Uma base (template) de aplicação web construída com Django, focada em oferecer
 um ponto de partida com autenticação, gerenciamento de perfis e integração
@@ -61,7 +60,7 @@ poetry install
 - PRODUCTION (setar True/False no container)
 
 4. Execute migrations e crie um superusuário (o script `start.sh` já tenta
-criar um usuário `admin` usando `ADMIN_PASSWORD`):
+   criar um usuário `admin` usando `ADMIN_PASSWORD`):
 
 ```bash
 cd service
@@ -96,9 +95,9 @@ Observações sobre o container:
 
 - O `Dockerfile` instala o Poetry e as ferramentas de lint (black/isort/flake8).
 - O `start.sh` coleta estáticos, gera migrations, aplica `migrate` e cria um
-    superusuário `admin` (utiliza a variável `ADMIN_PASSWORD`).
+  superusuário `admin` (utiliza a variável `ADMIN_PASSWORD`).
 - Para modo produção, defina `PRODUCTION=True` no `.env` e o container usará
-    Gunicorn conforme `gunicorn_config.py`.
+  Gunicorn conforme `gunicorn_config.py`.
 
 ## Testes e Lint
 
@@ -120,20 +119,20 @@ O repositório já inclui scripts para facilitar testes e lint:
 
 ## Estrutura principal do projeto
 
- (visão resumida)
+(visão resumida)
 
 - service/: Dockerfile, scripts e código Python (src/)
-    - src/armoreddjango/: configurações do Django
-    - src/authentication/: app com models, serializers e views
-    - scripts/: scripts para start, lint e testes
+  - src/armoreddjango/: configurações do Django
+  - src/authentication/: app com models, serializers e views
+  - scripts/: scripts para start, lint e testes
 - docker-compose.yaml: define os serviços `django` e `db` (Postgres)
 
 Exemplo de arquivos relevantes:
 
 - `service/src/authentication/models/Profile.py` — modelo `Profile` que
-    estende `AbstractUser` adicionando `email` único e `profileType`.
+  estende `AbstractUser` adicionando `email` único e `profileType`.
 - `service/src/authentication/api/ProfileRestView.py` — `ModelViewSet` que
-    expõe operações de list/update (create e delete são proibidos).
+  expõe operações de list/update (create e delete são proibidos).
 
 ## Como contribuir
 
