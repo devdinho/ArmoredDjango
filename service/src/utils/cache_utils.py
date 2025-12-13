@@ -5,7 +5,9 @@ from django.core.cache import cache
 
 
 def update_favorites_cache_for_user_example(user_id, invalidate=False):
-    """Atualiza o cache de favoritos do usuário e retorna os dados serializados.
+    """Este é um exemplo de função de cache in memory que:
+
+    Atualiza o cache de favoritos do usuário e retorna os dados serializados.
 
     Args:
         user_id (int): id do usuário (customer) cujo cache deve ser atualizado.

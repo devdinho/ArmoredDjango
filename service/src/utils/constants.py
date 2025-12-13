@@ -18,18 +18,21 @@ class ProfileType(object):
     )
 
 
-class Status(object):
-    """Object representando diferentes status de objetos.
+class EmailType(object):
+    """Object representando diferentes tipos de Emails.
 
     Atributos:
-        - ACTIVE (int): Ativo, objeto ativo.
-        - INACTIVE (int): Inativo, objeto inativo.
+        - WELCOME (int): Email de Boas Vindas.
+        - PASSWORD_RESET (int): Email de Redefinição de Senha.
+        - NOTIFICATION (int): Email de Notificação.
     """
 
-    ACTIVE = 1
-    INACTIVE = 2
+    WELCOME = 1
+    PASSWORD_RESET = 2
+    NOTIFICATION = 3
 
-    STATUS_CHOICES = (
-        (ACTIVE, "Ativo"),
-        (INACTIVE, "Inativo"),
+    EMAIL_TYPE_CHOICES = (
+        (WELCOME, "Boas Vindas"),
+        (PASSWORD_RESET, "Redefinição de Senha"),
+        (NOTIFICATION, "Notificação"),
     )

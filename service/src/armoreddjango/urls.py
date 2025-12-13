@@ -55,9 +55,7 @@ if not settings.PRODUCTION:
     ]
 
 router = DefaultRouter(trailing_slash=False)
-router.register(
-    "api/register/", CreateProfileRestView, basename="CreateProfileRestView"
-)
+router.register("api/register", CreateProfileRestView, basename="CreateProfileRestView")
 router.register("api/profile", ProfileRestView, basename="ProfileRestView")
 
 urlpatterns += router.urls

@@ -26,7 +26,7 @@ def _make_profile(
         payload["is_superuser"] = True
 
     client = APIClient()
-    response = client.post("/api/register/", payload, format="json")
+    response = client.post("/api/register", payload, format="json")
 
     return payload, response
 

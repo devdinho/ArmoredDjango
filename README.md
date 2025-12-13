@@ -1,159 +1,625 @@
 ![ArmoredDjango](title.png)
 
-Uma base (template) de aplicação web construída com Django, focada em oferecer
-um ponto de partida com autenticação, gerenciamento de perfis e integração
-pronta para execução via Docker. Este repositório contém o código do service
-(backend) em `service/src` e scripts para facilitar desenvolvimento, lint e
-testes.
+# 🛡️ ArmoredDjango
 
-## Sumário
+**Template Django profissional e pronto para produção** com autenticação JWT, gerenciamento de usuários, validação de senhas complexas, sistema de emails, cache, testes completos e integração Docker.
 
-- Visão geral
-- Requisitos
-- Instalação (local)
-- Execução com Docker
-- Testes e lint
-- Estrutura do projeto
-- Como contribuir
-- Licença
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/) [![Django](https://img.shields.io/badge/Django-5.2.8-green.svg)](https://www.djangoproject.com/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-## Visão geral
+---
 
-O projeto inclui:
+## 📋 Sumário
 
-- App `authentication` com um modelo de usuário customizado `Profile`.
-- Endpoints REST (DRF) para manipulação do perfil (`ProfileRestView`).
-- Scripts para iniciar a aplicação, coletar estáticos e executar migrations.
-- Configuração para executar via Docker (imagem baseada em Python + Poetry).
+- [Visão Geral](#-visão-geral)
+- [Features](#-features)
+- [Tecnologias](#-tecnologias)
+- [Requisitos](#-requisitos)
+- [Instalação Rápida](#-instalação-rápida)
+- [Configuração](#-configuração)
+- [Executando o Projeto](#-executando-o-projeto)
+- [Testes](#-testes)
+- [Estrutura do Projeto](#-estrutura-do-projeto)
+- [API Endpoints](#-api-endpoints)
+- [Deploy](#-deploy)
+- [Contribuindo](#-contribuindo)
+- [Licença](#-licença)
 
-## Requisitos
+---
 
-- Python >= 3.10
-- Docker & Docker Compose (opcional, recomendado para desenvolvimento e CI)
-- PostgreSQL (quando não usar Docker)
+## 🎯 Visão Geral
 
-As dependências Python estão gerenciadas via Poetry no arquivo
-`service/pyproject.toml`.
+**ArmoredDjango** é um template Django completo e pronto para produção, ideal para iniciar novos projetos rapidamente. Elimina a necessidade de configurações repetitivas e implementa as melhores práticas da comunidade Django.
 
-## Instalação (modo local, sem Docker)
+### Para quem é este template?
 
-1. Crie e ative um ambiente virtual com Python >=3.10:
+- ✅ Desenvolvedores que querem iniciar projetos Django rapidamente
+- ✅ Equipes que buscam um boilerplate com melhores práticas
+- ✅ Projetos que precisam de autenticação JWT desde o início
+- ✅ Aplicações que exigem controle granular de permissões
+
+---
+
+## ✨ Features
+
+### 🔐 Autenticação & Segurança
+
+- ✅ Autenticação JWT (Simple JWT)
+- ✅ Modelo de usuário customizado (`Profile`)
+- ✅ Validação de senha complexa (maiúscula, minúscula, número, caractere especial)
+- ✅ Senha mínima de 8 caracteres
+- ✅ Sistema de permissões e grupos
+- ✅ Histórico de alterações (django-simple-history)
+- ✅ Rate limiting (5/s anônimo, 20/s autenticado)
+
+### 🎨 Painel Administrativo
+
+- ✅ MaterialDash - Interface admin moderna e responsiva
+- ✅ Theme Material Design
+- ✅ Dashboard intuitivo e profissional
+- ✅ Melhor experiência de gerenciamento
+
+### 📧 Sistema de Emails
+
+- ✅ Funções prontas para envio de emails
+- ✅ Suporte a HTML com CSS inline (Pynliner)
+- ✅ Templates de boas-vindas e reset de senha
+- ✅ Sanitização de HTML (Bleach)
+
+### 🚀 Performance & Cache
+
+- ✅ Sistema de cache configurado
+- ✅ Timeouts de cache configuráveis (1 hora / 5 minutos)
+- ✅ Exemplo de função de cache incluído
+
+### 🧪 Testes
+
+- ✅ 50+ testes unitários incluídos
+- ✅ Pytest configurado
+- ✅ Cobertura de models, serializers, validators
+- ✅ Scripts prontos para CI/CD
+
+### 🐳 Docker & DevOps
+
+- ✅ Docker Compose completo
+- ✅ Dockerfile otimizado com Poetry
+- ✅ Scripts de inicialização automática
+- ✅ Configurações separadas para dev/prod
+- ✅ GitHub Actions workflow incluído
+
+### 📚 Documentação
+
+- ✅ Swagger/OpenAPI integrado
+- ✅ ReDoc disponível
+- ✅ Código bem documentado
+- ✅ Type hints em Python
+
+---
+
+## 🛠️ Tecnologias
+
+### Backend
+
+- **Django 5.2.8** - Framework web
+- **Django REST Framework 3.15.2** - API REST
+- **Simple JWT 5.5.1** - Autenticação JWT
+- **PostgreSQL** - Banco de dados
+- **Gunicorn** - Servidor WSGI para produção
+- **MaterialDash >=0.0.24.2** - Interface admin moderna
+
+### DevOps & Tools
+
+- **Docker & Docker Compose** - Containerização
+- **Poetry** - Gerenciamento de dependências
+- **Pytest** - Framework de testes
+- **Black, isort, Flake8** - Code quality
+- **GitHub Actions** - CI/CD
+
+### Bibliotecas Adicionais
+
+- **django-cors-headers** - CORS
+- **drf-yasg** - Documentação Swagger
+- **materialdash** - Theme Material Design para Django Admin
+- **pillow** - Processamento de imagens
+- **pynliner** - CSS inline para emails
+- **bleach** - Sanitização de HTML
+- **python-slugify** - Geração de slugs
+- **requests** - Cliente HTTP
+
+---
+
+## 📦 Requisitos
+
+- **Python 3.10+**
+- **Docker & Docker Compose** (recomendado)
+- **PostgreSQL 17** (se não usar Docker)
+- **Poetry** (opcional, para instalação local)
+
+---
+
+## 🚀 Instalação Rápida
+
+### Com Docker (Recomendado)
 
 ```bash
-python -m venv .venv
-source .venv/bin/activate
+# 1. Clone o repositório
+git clone https://github.com/devdinho/ArmoredDjango.git
+cd ArmoredDjango
+
+# 2. Copie o arquivo de exemplo e configure as variáveis
+cp .env.example .env
+
+# 3. Edite o .env e configure suas variáveis
+nano .env  # ou seu editor preferido
+
+# 4. Suba os containers
+docker compose up --build
+
+# 5. Acesse a aplicação
+# http://localhost:8003/
+# http://localhost:8003/admin/
+# http://localhost:8003/swagger/
 ```
 
-2. Instale as dependências (preferido: usar Poetry):
+### Instalação Local (Sem Docker)
 
 ```bash
+# 1. Clone o repositório
+git clone https://github.com/devdinho/ArmoredDjango.git
+cd ArmoredDjango
+
+# 2. Crie e ative um ambiente virtual
+python -m venv .venv
+source .venv/bin/activate  # Linux/Mac
+# ou
+.venv\Scripts\activate  # Windows
+
+# 3. Instale as dependências
 cd service
 poetry install
-```
+# ou
+pip install -r requirements.txt
 
-3. Copie e configure variáveis de ambiente (arquivo `.env`). Exemplos:
+# 4. Configure o .env
+cp ../.env.example ../.env
+nano ../.env
 
-- POSTGRES_USER
-- POSTGRES_PASSWORD
-- DB_PORT
-- ADMIN_PASSWORD
-- PRODUCTION (setar True/False no container)
-
-4. Execute migrations e crie um superusuário (o script `start.sh` já tenta
-   criar um usuário `admin` usando `ADMIN_PASSWORD`):
-
-```bash
-cd service
+# 5. Execute as migrações
 python src/manage.py migrate
+
+# 6. Crie um superusuário
 python src/manage.py createsuperuser
-```
 
-5. Rode o servidor de desenvolvimento:
-
-```bash
+# 7. Inicie o servidor
 python src/manage.py runserver 0.0.0.0:8003
 ```
 
-Abra http://localhost:8003/ no navegador.
+---
 
-## Execução com Docker (recomendado)
+## ⚙️ Configuração
 
-O projeto fornece um `Dockerfile` e `docker-compose.yaml` na raiz que
-constroem um container do serviço e um container com PostgreSQL. O container do
-service monta `./service` em `/app` e usa `/app/scripts/start.sh` como entrypoint.
+### 1. Variáveis de Ambiente
 
-Para rodar com Docker Compose:
+Copie `.env.example` para `.env` e configure:
 
 ```bash
-# (na raiz do projeto)
+# Django
+SECRET_KEY=your-secret-key-here
+DEBUG=True
+PRODUCTION=False
+
+# Database
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_PORT=5432
+
+# Admin
+ADMIN_PASSWORD=admin123!
+
+# System
+SYSTEM_URL=localhost
+
+# CORS
+CORS_ALLOW_ALL_ORIGINS=False
+
+# Email (opcional)
+EMAIL_BACKEND=django.core.mail.backends.smtp.EmailBackend
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=your-email@gmail.com
+EMAIL_HOST_PASSWORD=your-app-password
+DEFAULT_FROM_EMAIL=noreply@example.com
+```
+
+### 2. Gerando SECRET_KEY
+
+O Django precisa de uma `SECRET_KEY` segura. Para gerar uma nova:
+
+**Método 1: Usando Django (recomendado)**
+
+```bash
+python -c "from django.core.management.utils import get_random_secret_key; print(get_random_secret_key())"
+```
+
+**Método 2: Usando Python puro**
+
+```python
+import secrets
+print(secrets.token_urlsafe(50))
+```
+
+⚠️ **IMPORTANTE**: Nunca commite sua `SECRET_KEY` no repositório! Mantenha-a sempre no `.env`.
+
+### 3. Configurações de Email
+
+Para usar o sistema de emails, configure seu provedor SMTP no `.env`. Exemplos:
+
+**Gmail:**
+
+```bash
+EMAIL_HOST=smtp.gmail.com
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=seu-email@gmail.com
+EMAIL_HOST_PASSWORD=senha-de-app  # Use senha de app, não sua senha normal
+```
+
+**SendGrid:**
+
+```bash
+EMAIL_HOST=smtp.sendgrid.net
+EMAIL_PORT=587
+EMAIL_USE_TLS=True
+EMAIL_HOST_USER=apikey
+EMAIL_HOST_PASSWORD=sua-api-key
+```
+
+---
+
+## 🏃 Executando o Projeto
+
+### Com Docker
+
+```bash
+
+# Build
 docker compose up --build
+
+# Logs
+docker compose logs -f django
+
+# Parar containers
+docker compose down
 ```
 
-Com isso o serviço Django ficará disponível em `http://localhost:8003/`.
-
-Observações sobre o container:
-
-- O `Dockerfile` instala o Poetry e as ferramentas de lint (black/isort/flake8).
-- O `start.sh` coleta estáticos, gera migrations, aplica `migrate` e cria um
-  superusuário `admin` (utiliza a variável `ADMIN_PASSWORD`).
-- Para modo produção, defina `PRODUCTION=True` no `.env` e o container usará
-  Gunicorn conforme `gunicorn_config.py`.
-
-## Testes e Lint
-
-O repositório já inclui scripts para facilitar testes e lint:
-
-- Testes unitários (executar dentro do container ou localmente):
+### Localmente
 
 ```bash
-# dentro do container ou no diretório service com ambiente configurado
+cd service
+
+# Desenvolvimento
+python src/manage.py runserver 0.0.0.0:8003
+
+# Produção (com Gunicorn)
+gunicorn -c src/gunicorn_config.py armoreddjango.wsgi:application
+```
+
+### Acessando a Aplicação
+
+- **API**: http://localhost:8003/
+- **Admin**: http://localhost:8003/admin/
+- **Swagger**: http://localhost:8003/swagger/
+- **ReDoc**: http://localhost:8003/redoc/
+
+---
+
+## 🧪 Testes
+
+### Executar todos os testes
+
+```bash
+# Com Docker
+docker compose run test
+
+# Localmente
+cd service
 ./scripts/run_unit_tests.sh
+# ou
+pytest src/
 ```
 
-- Lint e formatação (local ou container):
+### Executar testes específicos
 
 ```bash
-# Executa black, isort e flake8 nos arquivos/pastas informados
-./scripts/start-lint.sh <caminho-ou-pacote>
+# Testes de autenticação
+pytest src/authentication/tests/
+
+# Testes de um arquivo específico
+pytest src/authentication/tests/test_validators.py
+
+# Testes com coverage
+pytest --cov=src --cov-report=html
 ```
 
-## Estrutura principal do projeto
+### Lint & Formatação
 
-(visão resumida)
+```bash
+# Com Docker
+docker compose run lint
 
-- service/: Dockerfile, scripts e código Python (src/)
-  - src/armoreddjango/: configurações do Django
-  - src/authentication/: app com models, serializers e views
-  - scripts/: scripts para start, lint e testes
-- docker-compose.yaml: define os serviços `django` e `db` (Postgres)
+# Localmente
+cd service
+./scripts/start-lint.sh src
 
-Exemplo de arquivos relevantes:
+# Ou manualmente
+black src/
+isort src/
+flake8 src/
+```
 
-- `service/src/authentication/models/Profile.py` — modelo `Profile` que
-  estende `AbstractUser` adicionando `email` único e `profileType`.
-- `service/src/authentication/api/ProfileRestView.py` — `ModelViewSet` que
-  expõe operações de list/update (create e delete são proibidos).
+---
 
-## Como contribuir
+## 📁 Estrutura do Projeto
 
-Pequenas contribuições são bem-vindas. Fluxo sugerido:
+```
+armoreddjango/
+├── .github/
+│   └── workflows/
+│       └── lint-and-test.yml      # CI/CD workflow
+├── service/
+│   ├── Dockerfile                  # Container configuration
+│   ├── pyproject.toml             # Dependencies
+│   ├── scripts/
+│   │   ├── start.sh               # Startup script
+│   │   ├── start-lint.sh          # Linting script
+│   │   └── run_unit_tests.sh      # Test script
+│   └── src/
+│       ├── manage.py              # Django management
+│       ├── gunicorn_config.py     # Gunicorn config
+│       ├── armoreddjango/         # Main project
+│       │   ├── settings/
+│       │   │   ├── base.py        # Base settings
+│       │   │   └── env.py         # Environment settings
+│       │   ├── urls.py            # URL configuration
+│       │   ├── asgi.py
+│       │   └── wsgi.py
+│       ├── authentication/        # Authentication app
+│       │   ├── models/
+│       │   │   ├── Profile.py     # User model
+│       │   │   └── Groups.py
+│       │   ├── serializers/
+│       │   │   └── ProfileSerializer.py
+│       │   ├── api/
+│       │   │   ├── ProfileRestView.py
+│       │   │   └── CreateProfileRestView.py
+│       │   ├── admin/
+│       │   │   ├── ProfileAdmin.py
+│       │   │   └── GroupsAdmin.py
+│       │   ├── validators.py      # Password validators
+│       │   └── tests/             # 50+ tests
+│       │       ├── test_validators.py
+│       │       ├── test_profile_model.py
+│       │       └── test_serializers.py
+│       └── utils/                 # Utilities
+│           ├── constants.py       # Constants
+│           ├── cache_utils.py     # Cache helpers
+│           └── emails.py          # Email functions
+├── docker-compose.yaml            # Docker Compose
+├── .env.example                   # Environment template
+└── README.md                      # This file
+```
 
-1. Fork do repositório
-2. Crie uma branch com a feature/bugfix: `git checkout -b feat/minha-mudanca`
-3. Abra um pull request descrevendo a alteração
+---
 
-Dicas:
+## 🔌 API Endpoints
 
-- Rode os testes localmente antes de abrir PR
-- Siga as regras do linter (black/isort/flake8)
+### Autenticação
 
-## Comandos úteis rápidos
+```
+POST   /api/login/           # Obter token JWT
+POST   /api/login/refresh/   # Refresh token
+POST   /api/login/verify/    # Verificar token
+POST   /api/logout/          # Blacklist token
+```
 
-- Subir com Docker Compose: `docker-compose up --build`
-- Rodar apenas o serviço (em dev): `python service/src/manage.py runserver`
-- Executar testes: `service/scripts/run_unit_tests.sh`
-- Executar lint: `service/scripts/start-lint.sh <alvo>`
+### Perfis de Usuário
 
-## Licença
+```
+POST   /api/register         # Criar novo usuário
+GET    /api/profile          # Listar usuários
+GET    /api/profile/{id}     # Obter usuário específico
+PUT    /api/profile/{id}     # Atualizar usuário
+PATCH  /api/profile/{id}     # Atualizar parcialmente
+```
 
-Este projeto está sob a licença MIT — veja `LICENSE` para detalhes.
+### Documentação
+
+```
+GET    /swagger/             # Swagger UI
+GET    /redoc/               # ReDoc UI
+GET    /admin/               # Django Admin
+```
+
+### Exemplo de Uso
+
+```bash
+# Criar usuário
+curl -X POST http://localhost:8003/api/register \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john.doe",
+    "email": "john@example.com",
+    "first_name": "John",
+    "last_name": "Doe",
+    "password": "SecurePass123!"
+  }'
+
+# Login
+curl -X POST http://localhost:8003/api/login/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "username": "john.doe",
+    "password": "SecurePass123!"
+  }'
+
+# Usar token
+curl -X GET http://localhost:8003/api/profile \
+  -H "Authorization: Bearer seu-token-jwt-aqui"
+```
+
+---
+
+## ⚙️ Configurações do Gunicorn
+
+O projeto inclui 3 configurações prontas para diferentes cenários de uso. Escolha a mais adequada ao seu caso:
+
+### 1️⃣ API Simples (CRUD, REST) - **Padrão**
+
+```python
+# service/src/gunicorn_config.py
+# Bom equilíbrio para APIs tradicionais
+# Requests curtas, pouco processamento pesado
+
+workers = 4          # Escala bem em máquinas com 2–4 vCPUs
+threads = 2          # Pequeno ganho em I/O (DB, cache)
+timeout = 30         # Padrão seguro
+
+bind = "0.0.0.0:8003"
+chdir = "/app/"
+module = "armoreddjango.wsgi:application"
+```
+
+**Quando usar:** CRUD tradicional, APIs REST, sem conexões longas.
+
+### 2️⃣ API com SSE / Streaming
+
+```python
+# Ideal para Server-Sent Events ou conexões longas
+# Poucos workers para não travar novas conexões
+
+workers = 2          # Poucos processos para evitar bloqueio
+threads = 8          # Cada thread pode segurar um stream
+timeout = 0          # Nunca matar conexão SSE
+
+bind = "0.0.0.0:8003"
+chdir = "/app/"
+module = "armoreddjango.wsgi:application"
+```
+
+**Quando usar:** Server-Sent Events, streaming de dados, conexões persistentes.
+
+### 3️⃣ API com LLM (Streaming de IA)
+
+```python
+# Configuração para LLMs (OpenAI, Anthropic, etc)
+# Requests longas, I/O bound, streaming contínuo
+
+workers = 1          # LLM consome muita memória
+threads = 12         # Suporta múltiplas streams simultâneas
+timeout = 0          # Streaming nunca deve expirar
+
+bind = "0.0.0.0:8003"
+chdir = "/app/"
+module = "armoreddjango.wsgi:application"
+```
+
+**Quando usar:** Integração com LLMs, streaming de respostas de IA, processamento pesado.
+
+### 📊 Resumo Rápido
+
+| Cenário           | Workers | Threads | Timeout | Uso               |
+| ----------------- | ------- | ------- | ------- | ----------------- |
+| **CRUD/REST**     | 4       | 2       | 30s     | APIs tradicionais |
+| **SSE/Streaming** | 2       | 8       | 0       | Conexões longas   |
+| **LLM/IA**        | 1       | 12      | 0       | Streaming de IA   |
+
+### 💡 Conceitos
+
+- **Workers:** Processos separados (CPU-bound, mais memória)
+- **Threads:** Mais leves (I/O-bound, compartilham memória)
+- **Timeout:** Tempo máximo de resposta (0 = sem limite)
+
+**Dica:** Comece com a configuração padrão e ajuste conforme a necessidade.
+
+---
+
+## 🚀 Deploy
+
+### Preparação
+
+1. Configure `PRODUCTION=True` no `.env`
+2. Defina `DEBUG=False`
+3. Configure `ALLOWED_HOSTS` e `CSRF_TRUSTED_ORIGINS`
+4. Gere uma nova `SECRET_KEY` segura
+5. Configure email SMTP de produção
+6. Configure backup do banco de dados
+7. **Escolha a configuração adequada do Gunicorn** (veja seção acima)
+
+### Docker em Produção
+
+```bash
+docker compose up --build -d
+```
+
+### Coleta de Arquivos Estáticos
+
+```bash
+python src/manage.py collectstatic --noinput
+```
+
+### Checklist de Segurança
+
+- [ ] `DEBUG=False` em produção
+- [ ] `SECRET_KEY` única e segura
+- [ ] `ALLOWED_HOSTS` configurado corretamente
+- [ ] HTTPS configurado (Let's Encrypt, Cloudflare, etc)
+- [ ] Firewall configurado (apenas portas necessárias)
+- [ ] Backup automático do banco de dados
+- [ ] Logs configurados e monitorados
+- [ ] Rate limiting ativado
+
+---
+
+## 🤝 Contribuindo
+
+Contribuições são bem-vindas! Siga estas etapas:
+
+1. Fork o projeto
+2. Crie uma branch para sua feature (`git checkout -b feat/nova-feature`)
+3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
+4. Push para a branch (`git push origin feat/nova-feature`)
+5. Abra um Pull Request
+
+### Diretrizes
+
+- ✅ Siga o estilo de código (Black, isort, Flake8)
+- ✅ Adicione testes para novas features
+- ✅ Atualize a documentação
+- ✅ Mantenha commits claros e descritivos
+
+---
+
+## 📝 Licença
+
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+
+---
+
+## 👨‍💻 Autor
+
+**Anderson Freitas**
+
+- Email: freitas.dev@proton.me
+- GitHub: [@devdinho](https://github.com/devdinho)
+
+---
+
+## 🙏 Agradecimentos
+
+- Comunidade Django
+- Equipe Django REST Framework
+- Todos os contribuidores de bibliotecas open source utilizadas
+
+---
+
+**⭐ Se este projeto foi útil, considere dar uma estrela no GitHub!**

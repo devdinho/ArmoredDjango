@@ -6,11 +6,13 @@ services:
       dockerfile: Dockerfile
     ports:
       - "8003:8003"
-    volumes:
-      - ./service:/app
     depends_on:
       - db
     env_file: '.env'
+    volumes:
+      - ./service:/app
+    networks:
+      - armoreddjango_network
     restart: always
 
   db:
@@ -25,6 +27,39 @@ services:
       - "${DB_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data/
+    networks:
+      - armoreddjango_network
+
+  lint:
+    container_name: armoreddjango_lint
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - django
+    volumes:
+      - ./service:/app
+    env_file: '.env'
+    working_dir: /app
+    command: /bin/sh -c "bash scripts/start-lint.sh src"
+    
+  test:
+    container_name: armoreddjango_test
+    build:
+      context: ./service
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+      - django
+    env_file: '.env'
+    command: /bin/sh -c "scripts/run_unit_tests.sh"
+    networks:
+      - armoreddjango_network
+
+networks:
+  armoreddjango_network:
+    driver: bridge
 
 volumes:
   postgres_data:

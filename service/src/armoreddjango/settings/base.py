@@ -1,8 +1,12 @@
 import os
+import sys
 from datetime import timedelta
 from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+# Detecta se está rodando testes
+TESTING = "pytest" in sys.modules or "test" in sys.argv
 
 
 DEFAULT_APPS = [
@@ -55,12 +59,20 @@ REST_FRAMEWORK = {
     ),
 }
 
+# Aplica rate limiting apenas em produção, não em testes
+if not TESTING:
+    REST_FRAMEWORK["DEFAULT_THROTTLE_CLASSES"] = [
+        "rest_framework.throttling.AnonRateThrottle",
+        "rest_framework.throttling.UserRateThrottle",
+    ]
+    REST_FRAMEWORK["DEFAULT_THROTTLE_RATES"] = {"anon": "5/second", "user": "20/second"}
+
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=15),  # 15 Minutes
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),  # 7 Days
-    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=1),  # 1 Day
+    "SLIDING_TOKEN_REFRESH_LIFETIME": timedelta(days=7),  # 7 Days
     "SLIDING_TOKEN_LIFETIME": timedelta(days=7),  # 7 Days
-    "SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER": timedelta(days=1),  # 1 Day
+    "SLIDING_TOKEN_REFRESH_LIFETIME_LATE_USER": timedelta(days=7),  # 7 Days
     "SLIDING_TOKEN_LIFETIME_LATE_USER": timedelta(days=7),  # 7 Days
 }
 
@@ -74,7 +86,7 @@ SWAGGER_SETTINGS = {
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -96,12 +108,18 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        "OPTIONS": {
+            "min_length": 8,
+        },
     },
     {
         "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
     },
     {
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+    },
+    {
+        "NAME": "authentication.validators.ComplexPasswordValidator",
     },
 ]
 
@@ -134,4 +152,5 @@ CACHES = {
     }
 }
 
-CACHE_TIMEOUT = 60 * 5
+CACHE_TIMEOUT = 60 * 60  # 1 hour
+CACHE_TIMEOUT_SHORT = 5 * 60  # 5 minutes

@@ -1,9 +1,6 @@
 name: Lint and Test
 
 on:
-  push:
-    branches:
-      - feature/*
   pull_request:
     branches:
       - main
@@ -15,49 +12,39 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Create .env file for Docker Compose
         run: |
-          echo "SECRET_KEY=SECRET_KEY_CI" >> .env
-          echo "PRODUCTION=False" >> .env
-          echo "DEBUG=True" >> .env
-          echo "ADMIN_PASSWORD=admin" >> .env
+          printf 'SECRET_KEY=%s\n' '${{ secrets.SECRET_KEY }}' >> .env
+          printf 'PRODUCTION=%s\n' 'False' >> .env
+          printf 'DEBUG=%s\n' '${{ secrets.DEBUG }}' >> .env
+          printf 'ADMIN_PASSWORD=%s\n' '${{ secrets.ADMIN_PASSWORD }}' >> .env
 
-          echo "SYSTEM_URL=localhost" >> .env
+          printf 'SYSTEM_URL=%s\n' '${{ secrets.SYSTEM_URL }}' >> .env
 
-          echo "POSTGRES_USER=postgres" >> .env
-          echo "POSTGRES_PASSWORD=postgres" >> .env
-          echo "DB_PORT=5432" >> .env
+          printf 'POSTGRES_USER=%s\n' '${{ secrets.POSTGRES_USER }}' >> .env
+          printf 'POSTGRES_PASSWORD=%s\n' '${{ secrets.POSTGRES_PASSWORD }}' >> .env
+          printf 'DB_PORT=%s\n' '${{ secrets.DB_PORT }}' >> .env
+          printf 'CORS_ALLOW_ALL_ORIGINS=%s\n' '${{ secrets.CORS_ALLOW_ALL_ORIGINS }}' >> .env
 
-      - name: Show Docker Compose version
-        run: docker compose version
+          printf 'VITE_DEBUG=%s\n' '${{ secrets.VITE_DEBUG }}' >> .env
+          printf 'VITE_ENV=%s\n' 'prod' >> .env
+          printf 'VITE_SYSTEM_URL=%s\n' '${{ secrets.VITE_SYSTEM_URL }}' >> .env
 
-      - name: Build and start lint container
-        run: docker compose up --build -d lint
+          printf 'EMAIL_BACKEND=%s\n' '${{ secrets.EMAIL_BACKEND }}' >> .env
+          printf 'EMAIL_HOST=%s\n' '${{ secrets.EMAIL_HOST }}' >> .env
+          printf 'EMAIL_PORT=%s\n' '${{ secrets.EMAIL_PORT }}' >> .env
+          printf 'EMAIL_USE_SSL=%s\n' '${{ secrets.EMAIL_USE_SSL }}' >> .env
+          printf 'EMAIL_HOST_USER=%s\n' '${{ secrets.EMAIL_HOST_USER }}' >> .env
+          printf 'EMAIL_HOST_PASSWORD=%s\n' '${{ secrets.EMAIL_HOST_PASSWORD }}' >> .env
+          printf 'DEFAULT_FROM_EMAIL=%s\n' '${{ secrets.DEFAULT_FROM_EMAIL }}' >> .env
 
-      - name: Wait for lint container to finish
+      - name: Build Docker images
         run: |
-          docker logs -f armoreddjango_lint
-          docker wait armoreddjango_lint
-          exit_code=$(docker inspect armoreddjango_lint --format='{{.State.ExitCode}}')
-          if [ "$exit_code" -ne 0 ]; then
-            echo "Lint container failed"
-            exit $exit_code
-          fi
+          docker compose build lint db test
 
-      - name: Build and start db and test containers
-        run: docker compose up --build -d db test
-
-      - name: Wait for test container to finish
-        run: |
-          docker logs -f armoreddjango_test
-          docker wait armoreddjango_test
-          exit_code=$(docker inspect armoreddjango_test --format='{{.State.ExitCode}}')
-          if [ "$exit_code" -ne 0 ]; then
-            echo "Test container failed"
-            exit $exit_code
-          fi
+          docker compose up --build -d lint db test
 
       - name: Tear down containers
-        run: docker compose down
+        run: docker compose down --remove-orphans
