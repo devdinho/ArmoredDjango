@@ -6,11 +6,11 @@ authors = [
     {name = "Anderson Freitas",email = "freitas.dev@proton.me"}
 ]
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
-    "asgiref (==3.8.1)",
+    "asgiref (>=3.9.1)",
     "click (==8.1.8)",
-    "django (==5.2.9)",
+    "django (>=6.0,<7.0)",
     "django-simple-history (==3.8.0)",
     "django-mkdocs (==0.1.2)",
     "djangorestframework (==3.15.2)",
@@ -53,7 +53,7 @@ requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry.dependencies]
-python = ">=3.10,<4.0"
+python = ">=3.12,<4.0"
 
 [tool.isort]
 profile = "black"

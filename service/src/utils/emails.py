@@ -2,8 +2,9 @@
 Email utility functions for sending emails.
 """
 
+import uuid
 from django.conf import settings
-from django.core.mail import EmailMultiAlternatives
+from django.core.mail import EmailMessage
 from pynliner import Pynliner
 
 
@@ -14,9 +15,12 @@ def send_email(
     html_content: str = None,
     from_email: str = None,
     inline_css: bool = True,
+    reply_to: list = None,
+    bcc: list = None,
+    headers: dict = None,
 ) -> bool:
     """
-    Envia um email com suporte a conteúdo HTML.
+    Envia um email com suporte a conteúdo HTML usando a API moderna do Django 6.
 
     Args:
         subject (str): Assunto do email
@@ -25,6 +29,9 @@ def send_email(
         html_content (str, optional): Conteúdo HTML do email
         from_email (str, optional): Email do remetente. Se None, usa DEFAULT_FROM_EMAIL
         inline_css (bool, optional): Se True, converte CSS externo em inline styles. Default: True
+        reply_to (list, optional): Lista de endereços para Reply-To
+        bcc (list, optional): Lista de destinatários em cópia oculta
+        headers (dict, optional): Headers customizados adicionais
 
     Returns:
         bool: True se o email foi enviado com sucesso, False caso contrário
@@ -34,7 +41,8 @@ def send_email(
         ...     subject="Bem-vindo!",
         ...     text_content="Bem-vindo ao nosso sistema.",
         ...     recipient_list=["user@example.com"],
-        ...     html_content="<h1>Bem-vindo ao nosso sistema!</h1>"
+        ...     html_content="<h1>Bem-vindo ao nosso sistema!</h1>",
+        ...     reply_to=["support@example.com"]
         ... )
         True
     """
@@ -42,18 +50,50 @@ def send_email(
         from_email = settings.DEFAULT_FROM_EMAIL
 
     try:
-        msg = EmailMultiAlternatives(subject, text_content, from_email, recipient_list)
-
+        # Prepara o conteúdo HTML com CSS inline se necessário
+        processed_html = None
         if html_content:
-            # Converte CSS externo em inline styles para melhor compatibilidade
             if inline_css:
                 try:
-                    html_content = Pynliner().from_string(html_content).run()
+                    processed_html = Pynliner().from_string(html_content).run()
                 except Exception as e:
                     print(f"Erro ao aplicar CSS inline: {e}")
-                    # Continua sem inline CSS se falhar
+                    processed_html = html_content
+            else:
+                processed_html = html_content
 
-            msg.attach_alternative(html_content, "text/html")
+        # Django 6: API moderna com EmailMessage
+        msg = EmailMessage(
+            subject=subject,
+            body=text_content,
+            from_email=from_email,
+            to=recipient_list,
+            bcc=bcc,
+            reply_to=reply_to,
+        )
+
+        # Define o corpo HTML se fornecido
+        if processed_html:
+            msg.content_subtype = "html"  # Define como HTML
+            msg.body = processed_html
+
+        # Adiciona headers importantes
+        email_headers = {
+            # Message-ID único para rastreamento e threading
+            "Message-ID": f"<{uuid.uuid7()}@{settings.DEFAULT_FROM_EMAIL.split('@')[-1]}>",
+            # Identificador do sistema
+            "X-Mailer": "ArmoredDjango/1.0",
+            # Prioridade normal
+            "X-Priority": "3",
+        }
+
+        # Adiciona headers customizados se fornecidos
+        if headers:
+            email_headers.update(headers)
+
+        # Aplica os headers ao email
+        for key, value in email_headers.items():
+            msg.extra_headers[key] = value
 
         msg.send()
         return True
