@@ -17,9 +17,9 @@ from authentication.api import CreateProfileRestView, ProfileRestView
 
 schema_view = get_schema_view(
     openapi.Info(
-        title="Armored Django API",
+        title="ArmoredDjango API",
         default_version="v1",
-        description="API documentation for the Armored Django project",
+        description="API documentation for the ArmoredDjango project",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="contact@armoreddjango.local"),
         license=openapi.License(name="BSD License"),

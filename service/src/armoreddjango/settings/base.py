@@ -35,7 +35,7 @@ TEMPLATES = [
 
 # Import modular settings
 from armoreddjango.settings.apps import *
-from armoreddjango.settings.rest_framework import *
 from armoreddjango.settings.cache import *
 from armoreddjango.settings.internationalization import *
+from armoreddjango.settings.rest_framework import *
 from armoreddjango.settings.static import *

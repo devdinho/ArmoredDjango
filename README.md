@@ -11,6 +11,7 @@
 ## 📋 Sumário
 
 - [Visão Geral](#-visão-geral)
+- [Usar como Template](#-usar-como-template)
 - [Features](#-features)
 - [Tecnologias](#-tecnologias)
 - [Requisitos](#-requisitos)
@@ -36,6 +37,53 @@
 - ✅ Equipes que buscam um boilerplate com melhores práticas
 - ✅ Projetos que precisam de autenticação JWT desde o início
 - ✅ Aplicações que exigem controle granular de permissões
+
+---
+
+## 🎨 Usar como Template
+
+### Renomear o Projeto
+
+Este template inclui scripts para renomear facilmente o projeto para o seu próprio nome:
+
+#### **Opção 1: Script Python (Recomendado)**
+
+```bash
+# Renomeia o projeto para "myproject"
+python rename_project.py myproject
+```
+
+#### **Opção 2: Script Bash**
+
+```bash
+# Torna o script executável (primeira vez)
+chmod +x rename_project.sh
+
+# Renomeia o projeto
+./rename_project.sh myproject
+```
+
+### O que os scripts fazem?
+
+✅ Renomeiam o diretório principal do app  
+✅ Atualizam todas as referências no código  
+✅ Atualizam `docker-compose.yaml`  
+✅ Atualizam `pyproject.toml`  
+✅ Atualizam configurações do Django  
+✅ Atualizam scripts de inicialização
+
+### Após renomear:
+
+```bash
+# 1. Reconstruir containers
+docker compose build
+
+# 2. Iniciar o projeto
+docker compose up -d
+
+# 3. Verificar se está funcionando
+docker logs armoreddjango_service
+```
 
 ---
 

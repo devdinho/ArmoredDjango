@@ -3,6 +3,7 @@ Email utility functions for sending emails.
 """
 
 import uuid
+
 from django.conf import settings
 from django.core.mail import EmailMessage
 from pynliner import Pynliner
