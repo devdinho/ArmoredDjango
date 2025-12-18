@@ -4,7 +4,7 @@
 
 **Template Django profissional e pronto para produção** com autenticação JWT, gerenciamento de usuários, validação de senhas complexas, sistema de emails, cache, testes completos e integração Docker.
 
-[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/) [![Django](https://img.shields.io/badge/Django-5.2.8-green.svg)](https://www.djangoproject.com/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python](https://img.shields.io/badge/Python-3.12+-blue.svg)](https://www.python.org/downloads/) [![Django](https://img.shields.io/badge/Django-6.0-green.svg)](https://www.djangoproject.com/) [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 ---
 
@@ -108,10 +108,13 @@ docker logs armoreddjango_service
 
 ### 📧 Sistema de Emails
 
-- ✅ Funções prontas para envio de emails
-- ✅ Suporte a HTML com CSS inline (Pynliner)
-- ✅ Templates de boas-vindas e reset de senha
-- ✅ Sanitização de HTML (Bleach)
+- ✅ **Emails multipart** (texto + HTML) com EmailMultiAlternatives
+- ✅ **Template HTML profissional** responsivo e modular
+- ✅ **9 tipos de emails prontos**: cadastro, recuperação de senha, notificações, pagamentos, etc
+- ✅ **Validação brasileira**: CPF e telefone com formatação automática
+- ✅ **CSS inline automático** (Pynliner) para compatibilidade
+- ✅ **Comando de teste**: `python manage.py test_email seu-email@example.com`
+- ✅ **Documentação completa**: guia rápido, exemplos e troubleshooting
 
 ### 🚀 Performance & Cache
 
@@ -121,10 +124,11 @@ docker logs armoreddjango_service
 
 ### 🧪 Testes
 
-- ✅ 50+ testes unitários incluídos
+- ✅ **80+ testes unitários** incluídos
 - ✅ Pytest configurado
-- ✅ Cobertura de models, serializers, validators
+- ✅ Cobertura de models, serializers, validators, emails e funções úteis
 - ✅ Scripts prontos para CI/CD
+- ✅ Testes de email com backend locmem
 
 ### 🐳 Docker & DevOps
 
@@ -147,37 +151,39 @@ docker logs armoreddjango_service
 
 ### Backend
 
-- **Django 5.2.8** - Framework web
+- **Django 6.0** - Framework web
 - **Django REST Framework 3.15.2** - API REST
-- **Simple JWT 5.5.1** - Autenticação JWT
-- **PostgreSQL** - Banco de dados
-- **Gunicorn** - Servidor WSGI para produção
-- **MaterialDash >=0.0.24.2** - Interface admin moderna
+- **djangorestframework-simplejwt 5.5.1** - Autenticação JWT
+- **PostgreSQL 17** - Banco de dados
+- **Gunicorn 23.x** - Servidor WSGI para produção
+- **MaterialDash 0.0.24.2+** - Interface admin moderna
 
 ### DevOps & Tools
 
 - **Docker & Docker Compose** - Containerização
 - **Poetry** - Gerenciamento de dependências
-- **Pytest** - Framework de testes
-- **Black, isort, Flake8** - Code quality
+- **Pytest 8.3.5+** - Framework de testes
+- **pytest-django 4.11.1+** - Integração Django/Pytest
 - **GitHub Actions** - CI/CD
 
 ### Bibliotecas Adicionais
 
-- **django-cors-headers** - CORS
-- **drf-yasg** - Documentação Swagger
-- **materialdash** - Theme Material Design para Django Admin
-- **pillow** - Processamento de imagens
-- **pynliner** - CSS inline para emails
-- **bleach** - Sanitização de HTML
-- **python-slugify** - Geração de slugs
-- **requests** - Cliente HTTP
+- **django-cors-headers 4.7.0+** - CORS
+- **drf-yasg 1.21.11+** - Documentação Swagger/OpenAPI
+- **django-simple-history 3.8.0** - Auditoria e histórico de mudanças
+- **Pillow 12.0+** - Processamento de imagens
+- **Pynliner 0.8.0+** - CSS inline para emails
+- **Bleach 4.1.0** - Sanitização de HTML
+- **python-slugify 8.0.4+** - Geração de slugs
+- **python-dotenv 1.0.1** - Variáveis de ambiente
+- **Requests 2.32.3+** - Cliente HTTP
+- **psycopg2-binary 2.9.10** - Adaptador PostgreSQL
 
 ---
 
 ## 📦 Requisitos
 
-- **Python 3.10+**
+- **Python 3.12+**
 - **Docker & Docker Compose** (recomendado)
 - **PostgreSQL 17** (se não usar Docker)
 - **Poetry** (opcional, para instalação local)
@@ -322,6 +328,18 @@ EMAIL_HOST_USER=apikey
 EMAIL_HOST_PASSWORD=sua-api-key
 ```
 
+**Para Desenvolvimento (Console):**
+
+```bash
+EMAIL_BACKEND=django.core.mail.backends.console.EmailBackend
+```
+
+📚 **Documentação completa do sistema de emails:**
+
+- [Guia Rápido](service/src/utils/EMAIL_QUICK_START.md)
+- [Documentação Completa](service/src/utils/EMAIL_IMPROVEMENTS.md)
+- [Guia de Testes](service/src/utils/EMAIL_TESTING.md)
+
 ---
 
 ## 🏃 Executando o Projeto
@@ -382,12 +400,33 @@ pytest src/
 # Testes de autenticação
 pytest src/authentication/tests/
 
+# Testes de emails
+pytest src/utils/tests/test_emails.py
+
+# Testes de validação (CPF/telefone)
+pytest src/utils/tests/test_useful_functions.py
+
 # Testes de um arquivo específico
 pytest src/authentication/tests/test_validators.py
 
 # Testes com coverage
 pytest --cov=src --cov-report=html
 ```
+
+### Testar envio de emails
+
+```bash
+# Enviar emails de teste para seu email
+python manage.py test_email seu-email@example.com
+
+# Testar tipo específico
+python manage.py test_email seu-email@example.com --tipo=cadastro
+
+# Com Docker
+docker exec -it armoreddjango_service python src/manage.py test_email seu-email@example.com
+```
+
+📚 Veja o [Guia de Testes de Email](service/src/utils/EMAIL_TESTING.md) para mais detalhes.
 
 ### Lint & Formatação
 
@@ -451,7 +490,19 @@ armoreddjango/
 │       └── utils/                 # Utilities
 │           ├── constants.py       # Constants
 │           ├── cache_utils.py     # Cache helpers
-│           └── emails.py          # Email functions
+│           ├── emails.py          # Email functions
+│           ├── email_template.html # Email HTML template
+│           ├── email_examples.py  # 9 email examples
+│           ├── useful_functions.py # CPF/phone validation
+│           ├── management/        # Django commands
+│           │   └── commands/
+│           │       └── test_email.py # Email test command
+│           ├── tests/
+│           │   ├── test_emails.py # Email tests
+│           │   └── test_useful_functions.py # Validation tests
+│           ├── EMAIL_QUICK_START.md # Quick start guide
+│           ├── EMAIL_IMPROVEMENTS.md # Full documentation
+│           └── EMAIL_TESTING.md   # Testing guide
 ├── docker-compose.yaml            # Docker Compose
 ├── .env.example                   # Environment template
 └── README.md                      # This file
@@ -633,7 +684,7 @@ python src/manage.py collectstatic --noinput
 Contribuições são bem-vindas! Siga estas etapas:
 
 1. Fork o projeto
-2. Crie uma branch para sua feature (`git checkout -b feat/nova-feature`)
+2. Crie uma branch para sua feature (`git switch -c feat/nova-feature`)
 3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
 4. Push para a branch (`git push origin feat/nova-feature`)
 5. Abra um Pull Request
